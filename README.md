@@ -1,21 +1,68 @@
-# Codex Usage Menu
+# Codex Health Menu
 
-A tiny macOS menu bar meter for watching Codex usage.
+A tiny macOS menu bar cockpit for Codex cloud usage and local machine health.
 
-It reads Codex remaining usage from the ChatGPT-backed Codex usage endpoint, using the existing local Codex login in `~/.codex/auth.json`. The menu bar shows both remaining windows with their reset timers, like `59% (3h) 79% (5d)`, and the dropdown includes local Codex token activity from `~/.codex/state_5.sqlite`.
+It combines the existing Codex usage meter with local thermal state and memory usage so the menu bar only needs one status item.
 
-![Icon options](icon-options.png)
+## Menu Bar Modes
 
-You can switch the status icon from the dropdown `Icon` submenu. The public repo includes the built-in symbol options; if the OpenAI Codex desktop app is installed locally, the app also offers its installed Codex icon as a local-only choice at runtime.
+Use the dropdown `Display` submenu to choose:
+
+- `Both`: `59% (3h) 79% (5d) | OK | RAM 45%`
+- `Codex Only`: `59% (3h) 79% (5d)`
+- `Local Health Only`: `OK | RAM 45%`
+- `Rotate`: alternates between Codex and Local Health
+
+Use `Rotation Interval` to choose 5, 10, 15, 30, or 60 seconds.
+
+## What It Shows
+
+Codex:
+
+- Short-window remaining usage and reset timer.
+- Weekly remaining usage and reset timer.
+- Local Codex token activity from `~/.codex/state_5.sqlite`.
+
+Local Health:
+
+- Exact temperature in C when a usable Apple Silicon HID temperature sensor is available.
+- Otherwise, macOS thermal state: `OK`, `Warm`, `Hot`, or `Crit`.
+- Memory used percentage from Mach VM stats.
+- RAM used total.
+
+## Color Rules
+
+Codex remaining:
+
+- Green: 50% or more remaining
+- Yellow: 20-49% remaining
+- Red: below 20% remaining
+
+Temperature:
+
+- Green: below 75 C, or thermal state `OK`
+- Yellow: 75-89 C, or thermal state `Warm`
+- Red: 90 C or hotter, or thermal state `Hot` / `Crit`
+
+Thermal throttling warning:
+
+- A `!` warning marker appears next to temperature only when thermal state is `Serious` or `Critical`
+- This warning is temperature / thermal-state driven, not memory driven
+
+Memory used:
+
+- Green: below 70% used
+- Yellow: 70-84% used
+- Red: 85% used or higher
 
 ## Notes
 
-- This does not send prompts or start Codex turns. Refreshing should not consume model tokens.
-- It polls every five minutes.
+- Refreshing Codex usage should not consume model tokens.
+- Codex usage polls every five minutes.
+- Local health refreshes every five seconds.
 - It reads your local Codex auth token but never displays or logs it.
 - While running, it sends that token as an `Authorization: Bearer ...` header to `https://chatgpt.com/backend-api/codex/usage`.
-- The usage endpoint is not a public stable API, so future Codex/ChatGPT changes may require an update.
-- If your local Codex login expires, refreshes can fail until you log back in with Codex.
+- Apple Silicon does not expose CPU die temperature through a stable public API, so this app tries an opportunistic HID temperature sensor first and falls back to macOS thermal state when no valid sensor reading is available.
 
 ## Requirements
 
@@ -33,35 +80,20 @@ You can switch the status icon from the dropdown `Icon` submenu. The public repo
 The app bundle is created at:
 
 ```text
-build/Codex Usage.app
+build/Codex Health.app
 ```
 
-## Run
+## Install
 
-Open the app bundle from Finder, or run:
+The intended app location is:
 
-```sh
-open "build/Codex Usage.app"
+```text
+/Applications/Codex Health.app
 ```
 
-## Optional Launch At Login
+The app dropdown includes `Launch at Login`.
 
-Use the checkmarkable `Launch at Login` item in the app dropdown.
+It also includes quick links for:
 
-The shell helpers below do the same thing manually:
-
-```sh
-./install-login-item.sh
-```
-
-To remove the login item:
-
-```sh
-./uninstall-login-item.sh
-```
-
-The meter refreshes every five minutes. Click it to refresh, open the Codex usage page, toggle launch-at-login, or quit.
-
-The menu bar displays the short and weekly Codex usage windows side by side.
-
-If you move the app after enabling launch-at-login, toggle `Launch at Login` off and on again so macOS points to the new app path.
+- `Open Codex Usage Page`
+- `Open Activity Monitor`

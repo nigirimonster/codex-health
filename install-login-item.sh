@@ -2,11 +2,11 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
-APP="$ROOT/build/Codex Usage.app"
-EXECUTABLE="$APP/Contents/MacOS/CodexUsageMenu"
-LABEL="io.github.codexusagemenu.app"
+APP="/Applications/Codex Health.app"
+EXECUTABLE="$APP/Contents/MacOS/CodexHealthMenu"
+LABEL="io.github.codexhealthmenu.app"
 PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
-LOG_DIR="$HOME/Library/Logs/CodexUsageMenu"
+LOG_DIR="$HOME/Library/Logs/CodexHealthMenu"
 
 xml_escape() {
   local value="$1"

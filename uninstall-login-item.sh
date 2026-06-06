@@ -2,8 +2,7 @@
 set -euo pipefail
 
 LABELS=(
-  "io.github.codexusagemenu.app"
-  "local.codex.usage-menu"
+  "io.github.codexhealthmenu.app"
 )
 
 for label in "${LABELS[@]}"; do
