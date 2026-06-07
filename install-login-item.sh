@@ -34,6 +34,11 @@ cat > "$PLIST" <<PLIST
   <array>
     <string>$(xml_escape "$EXECUTABLE")</string>
   </array>
+  <key>KeepAlive</key>
+  <dict>
+    <key>SuccessfulExit</key>
+    <false/>
+  </dict>
   <key>RunAtLoad</key>
   <true/>
   <key>StandardOutPath</key>

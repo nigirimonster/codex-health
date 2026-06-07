@@ -1412,6 +1412,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
           <array>
             <string>\(xmlEscape(executablePath))</string>
           </array>
+          <key>KeepAlive</key>
+          <dict>
+            <key>SuccessfulExit</key>
+            <false/>
+          </dict>
           <key>RunAtLoad</key>
           <true/>
           <key>StandardOutPath</key>
